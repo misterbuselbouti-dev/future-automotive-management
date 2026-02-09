@@ -1,0 +1,256 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Bus {
+  id          Int      @id @default(autoincrement())
+  busNumber   String   @unique @map("bus_number")
+  licensePlate String   @unique @map("license_plate")
+  type        BusType
+  status      BusStatus
+  consumption Float
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("buses")
+}
+
+// Modèles de gestion des achats
+model Fournisseur {
+  id          Int      @id @default(autoincrement())
+  nom         String
+  contact     String?
+  email       String?
+  telephone   String?
+  adresse     String?
+  rating      Float    @default(0)
+  statut      String   @default("Actif")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  demandesPrix DemandePrix[]
+  bonsCommande BonCommande[]
+  
+  @@map("fournisseurs")
+}
+
+model Article {
+  id          Int      @id @default(autoincrement())
+  reference   String   @unique
+  designation String
+  description String?
+  prixUnitaire Float?
+  unite       String?
+  categorie   String?
+  stock       Float    @default(0)
+  stockMin    Float    @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  lignesAchat      LigneDemandeAchat[]
+  lignesPrix      LigneDemandePrix[]
+  lignesCommande  LigneBonCommande[]
+  lignesReception LigneBonReception[]
+  
+  @@map("articles")
+}
+
+model DemandeAchat {
+  id          Int      @id @default(autoincrement())
+  reference   String   @unique
+  date        DateTime @default(now())
+  demandeur   String
+  departement String
+  motif       String
+  statut      StatutDemande @default(EN_ATTENTE)
+  priorite    Priorite @default(NORMAL)
+  approuvePar String?
+  dateApprobation DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  lignes      LigneDemandeAchat[]
+  demandesPrix DemandePrix[]
+  
+  @@map("demandes_achat")
+}
+
+model LigneDemandeAchat {
+  id           Int          @id @default(autoincrement())
+  demandeAchat Int
+  article      Int
+  quantite     Float
+  prixEstime   Float?
+  observation  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  demande      DemandeAchat @relation(fields: [demandeAchat], references: [id])
+  articleRef   Article     @relation(fields: [article], references: [id])
+  
+  @@map("lignes_demande_achat")
+}
+
+model DemandePrix {
+  id            Int      @id @default(autoincrement())
+  reference     String   @unique
+  demandeAchat  Int
+  fournisseur   Int
+  dateEnvoi     DateTime @default(now())
+  dateReponse   DateTime?
+  statut        StatutDemandePrix @default(ENVOYE)
+  prixTotal     Float?
+  delaiLivraison String?
+  observation   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  demande       DemandeAchat @relation(fields: [demandeAchat], references: [id])
+  fournisseurRef Fournisseur @relation(fields: [fournisseur], references: [id])
+  lignes        LigneDemandePrix[]
+  bonsCommande  BonCommande[]
+  
+  @@map("demandes_prix")
+}
+
+model LigneDemandePrix {
+  id            Int          @id @default(autoincrement())
+  demandePrix   Int
+  article       Int
+  prixUnitaire  Float
+  quantite      Float
+  remise        Float        @default(0)
+  delai         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  demande       DemandePrix @relation(fields: [demandePrix], references: [id])
+  articleRef    Article    @relation(fields: [article], references: [id])
+  
+  @@map("lignes_demande_prix")
+}
+
+model BonCommande {
+  id            Int      @id @default(autoincrement())
+  reference     String   @unique
+  demandePrix   Int
+  fournisseur   Int
+  date          DateTime @default(now())
+  dateLivraison DateTime?
+  statut        StatutBon @default(EN_ATTENTE)
+  montantTotal  Float
+  conditions    String?
+  approuvePar   String?
+  dateApprobation DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  demande       DemandePrix @relation(fields: [demandePrix], references: [id])
+  fournisseurRef Fournisseur @relation(fields: [fournisseur], references: [id])
+  lignes        LigneBonCommande[]
+  receptions    BonReception[]
+  
+  @@map("bons_commande")
+}
+
+model LigneBonCommande {
+  id            Int          @id @default(autoincrement())
+  bonCommande   Int
+  article       Int
+  quantite      Float
+  prixUnitaire  Float
+  remise        Float        @default(0)
+  montant       Float
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  commande      BonCommande @relation(fields: [bonCommande], references: [id])
+  articleRef    Article    @relation(fields: [article], references: [id])
+  
+  @@map("lignes_bon_commande")
+}
+
+model BonReception {
+  id            Int      @id @default(autoincrement())
+  reference     String   @unique
+  bonCommande   Int
+  date          DateTime @default(now())
+  statut        StatutBon @default(EN_ATTENTE)
+  controleQualite Boolean @default(false)
+  observation   String?
+  recuPar       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  commande      BonCommande @relation(fields: [bonCommande], references: [id])
+  lignes        LigneBonReception[]
+  
+  @@map("bons_reception")
+}
+
+model LigneBonReception {
+  id            Int          @id @default(autoincrement())
+  bonReception  Int
+  article       Int
+  quantite      Float
+  quantiteRecue Float
+  conforme      Boolean      @default(true)
+  observation   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  reception     BonReception @relation(fields: [bonReception], references: [id])
+  articleRef    Article    @relation(fields: [article], references: [id])
+  
+  @@map("lignes_bon_reception")
+}
+
+enum BusType {
+  Bus
+  MiniBus
+}
+
+enum BusStatus {
+  active
+  inactive
+  maintenance
+  retired
+}
+
+enum StatutDemande {
+  EN_ATTENTE
+  APPROUVEE
+  REJETEE
+  TRAITEE
+}
+
+enum Priorite {
+  BASSE
+  NORMAL
+  URGENTE
+}
+
+enum StatutDemandePrix {
+  ENVOYE
+  RECU
+  SELECTIONNE
+  REJETE
+}
+
+enum StatutBon {
+  EN_ATTENTE
+  APPROUVE
+  REJETE
+  LIVRE
+  RECU
+}

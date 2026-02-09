@@ -1,0 +1,206 @@
+{
+  "demandesAchat": [
+    {
+      "id": 1,
+      "reference": "DA-2024-001",
+      "date": "2024-02-01T10:00:00Z",
+      "demandeur": "Administrateur",
+      "service": "Maintenance",
+      "description": "Demande de filtres à huile pour maintenance mensuelle",
+      "statut": "APPROUVEE",
+      "priorite": "NORMAL",
+      "montant_total": 1250,
+      "created_at": "2024-02-01T10:00:00Z",
+      "updated_at": "2024-02-01T14:30:00Z"
+    },
+    {
+      "id": 2,
+      "reference": "DA-2024-002",
+      "date": "2024-02-05T09:00:00Z",
+      "demandeur": "ALAMI Mohammed",
+      "service": "Exploitation",
+      "description": "Demande de pneus pour bus 104",
+      "statut": "EN_ATTENTE",
+      "priorite": "URGENT",
+      "montant_total": 9000,
+      "created_at": "2024-02-05T09:00:00Z",
+      "updated_at": "2024-02-05T09:00:00Z"
+    },
+    {
+      "id": 3,
+      "reference": "DA-2024-003",
+      "date": "2024-02-08T11:00:00Z",
+      "demandeur": "BENANI Ahmed",
+      "service": "Maintenance",
+      "description": "Demande de pièces pour réparation système freinage",
+      "statut": "APPROUVEE",
+      "priorite": "URGENT",
+      "montant_total": 3500,
+      "created_at": "2024-02-08T11:00:00Z",
+      "updated_at": "2024-02-08T16:00:00Z"
+    }
+  ],
+  "demandesPrix": [
+    {
+      "id": 1,
+      "reference": "DP-2024-001",
+      "date": "2024-02-02T10:00:00Z",
+      "demandeur": "Administrateur",
+      "description": "Demande de prix pour filtres et huiles",
+      "statut": "EN_COURS",
+      "created_at": "2024-02-02T10:00:00Z",
+      "updated_at": "2024-02-02T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "reference": "DP-2024-002",
+      "date": "2024-02-06T14:00:00Z",
+      "demandeur": "ALAMI Mohammed",
+      "description": "Demande de prix pour pneus et pièces de rechange",
+      "statut": "TRAITEE",
+      "created_at": "2024-02-06T14:00:00Z",
+      "updated_at": "2024-02-07T10:00:00Z"
+    }
+  ],
+  "bonsCommande": [
+    {
+      "id": 1,
+      "reference": "BC-2024-001",
+      "date": "2024-02-03T10:00:00Z",
+      "fournisseur": "AUTO PIECES SARL",
+      "montant_total": 1250,
+      "statut": "LIVRE",
+      "created_at": "2024-02-03T10:00:00Z",
+      "updated_at": "2024-02-05T16:00:00Z"
+    },
+    {
+      "id": 2,
+      "reference": "BC-2024-002",
+      "date": "2024-02-09T11:00:00Z",
+      "fournisseur": "PIECES AUTO PRO",
+      "montant_total": 3500,
+      "statut": "EN_COURS",
+      "created_at": "2024-02-09T11:00:00Z",
+      "updated_at": "2024-02-09T11:00:00Z"
+    }
+  ],
+  "bonsReception": [
+    {
+      "id": 1,
+      "reference": "BR-2024-001",
+      "date": "2024-02-05T16:00:00Z",
+      "bon_commande_ref": "BC-2024-001",
+      "fournisseur": "AUTO PIECES SARL",
+      "statut": "CONFORME",
+      "created_at": "2024-02-05T16:00:00Z",
+      "updated_at": "2024-02-05T16:00:00Z"
+    }
+  ],
+  "fournisseurs": [
+    {
+      "id": 1,
+      "nom": "AUTO PIECES SARL",
+      "contact": "M. ALAMI",
+      "telephone": "0661234567",
+      "email": "contact@autopieces.ma",
+      "adresse": "123 Rue de la République, Casablanca",
+      "statut": "ACTIF",
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-01-01T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "nom": "PIECES AUTO PRO",
+      "contact": "M. BENANI",
+      "telephone": "0662345678",
+      "email": "info@piecesauto.ma",
+      "adresse": "456 Avenue Hassan II, Rabat",
+      "statut": "ACTIF",
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-01-01T10:00:00Z"
+    },
+    {
+      "id": 3,
+      "nom": "MOTOR PARTS",
+      "contact": "M. CHAKIR",
+      "telephone": "0663456789",
+      "email": "contact@motorparts.ma",
+      "adresse": "789 Boulevard Mohammed V, Marrakech",
+      "statut": "ACTIF",
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-01-01T10:00:00Z"
+    }
+  ],
+  "articles": [
+    {
+      "id": 1,
+      "reference": "ART-001",
+      "designation": "Filtre à huile",
+      "description": "Filtre à huile pour bus moteur diesel",
+      "prix_unitaire": 250,
+      "unite": "Pièce",
+      "categorie": "Filtration",
+      "stock": 45,
+      "stock_min": 10,
+      "derniere_vente": "08/02/2024",
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-02-08T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "reference": "ART-002",
+      "designation": "Pneu 315/80R22.5",
+      "description": "Pneu pour bus poids lourd",
+      "prix_unitaire": 4500,
+      "unite": "Pièce",
+      "categorie": "Pneumatique",
+      "stock": 12,
+      "stock_min": 8,
+      "derniere_vente": "07/02/2024",
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-02-07T10:00:00Z"
+    },
+    {
+      "id": 3,
+      "reference": "ART-003",
+      "designation": "Huile moteur 15W40",
+      "description": "Huile moteur pour diesel 15W40",
+      "prix_unitaire": 85,
+      "unite": "Litre",
+      "categorie": "Lubrifiants",
+      "stock": 120,
+      "stock_min": 50,
+      "derniere_vente": "06/02/2024",
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-02-06T10:00:00Z"
+    },
+    {
+      "id": 4,
+      "reference": "ART-004",
+      "designation": "Plaquette frein",
+      "description": "Plaquette de frein pour bus",
+      "prix_unitaire": 120,
+      "unite": "Pièce",
+      "categorie": "Freinage",
+      "stock": 30,
+      "stock_min": 15,
+      "derniere_vente": "05/02/2024",
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-02-05T10:00:00Z"
+    },
+    {
+      "id": 5,
+      "reference": "ART-005",
+      "designation": "Filtre à air",
+      "description": "Filtre à air pour moteur diesel",
+      "prix_unitaire": 80,
+      "unite": "Pièce",
+      "categorie": "Filtration",
+      "stock": 60,
+      "stock_min": 20,
+      "derniere_vente": "04/02/2024",
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-02-04T10:00:00Z"
+    }
+  ]
+}
