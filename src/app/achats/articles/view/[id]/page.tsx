@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/Button'
 interface Article {
   id: number
   reference: string
-  designation: description: string
+  designation: string
+  description: string
   prix_unitaire: number
   unite: string
   categorie: string
@@ -90,7 +91,7 @@ export default function ViewArticlePage() {
   if (loading) {
     return (
       <div className="flex h-screen bg-gray-50">
-        <sidebar />
+        <Sidebar />
         <div className="flex-1 flex flex-col">
           <Navbar user={{ name: 'Administrateur', role: 'Admin' }} />
           <main className="flex-1 p-6">
