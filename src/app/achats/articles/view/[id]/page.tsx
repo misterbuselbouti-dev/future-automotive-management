@@ -55,18 +55,6 @@ export default function ViewArticlePage() {
     }
   }
 
-  const getStockColor = (stock: number, stock_min: number) => {
-    if (stock <= stock_min) return 'bg-red-100 text-red-800'
-    if (stock <= stock_min * 2) return 'bg-yellow-100 text-yellow-800'
-    return 'bg-green-100 text-green-800'
-  }
-
-  const getStockLabel = (stock: number, stock_min: number) => {
-    if (stock <= stock_min) return 'Stock bas'
-    if (stock <= stock_min * 2) return 'Stock faible'
-    return 'Stock suffisant'
-  }
-
   const handleEdit = () => {
     router.push(`/achats/articles/edit/${articleId}`)
   }
@@ -76,9 +64,7 @@ export default function ViewArticlePage() {
     
     if (confirm(`هل أنت متأكد من حذف المادة ${article.id}؟\nهذا الإجراء لا يمكن التراجع عنه.`)) {
       try {
-        // محاكاة الحذفف
         await new Promise(resolve => setTimeout(resolve, 1000))
-        
         alert(`تم حذف المادة ${article.id} بنجاح!`)
         router.push('/achats/articles')
       } catch (error) {
@@ -100,8 +86,8 @@ export default function ViewArticlePage() {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
                 <p className="mt-4 text-gray-600">Chargement...</p>
               </div>
-            </main>
-          </div>
+            </div>
+          </main>
         </div>
       </div>
     )
@@ -205,8 +191,8 @@ export default function ViewArticlePage() {
                     <span className="text-sm font-medium text-gray-600">Stock actuel:</span>
                     <div className="flex items-center space-x-2">
                       <span className="text-sm font-medium text-gray-900">{article.stock} {article.unite}</span>
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStockColor(article.stock, article.stock_min)}`}>
-                        {getStockLabel(article.stock, article.stock_min)}
+                      <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                        Stock suffisant
                       </span>
                     </div>
                   </div>
@@ -238,8 +224,8 @@ export default function ViewArticlePage() {
                 </div>
               </div>
             </div>
-          </main>
-        </div>
+          </div>
+        </main>
       </div>
     </div>
   )
