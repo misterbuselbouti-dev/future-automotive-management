@@ -4,7 +4,8 @@ import { PrismaClient, BusType, BusStatus } from '@prisma/client';
 const prisma = new PrismaClient();
 
 interface BusData {
-  id?: number;
+  busNumber: string;
+  licensePlate: string;
   type: BusType;
   status: BusStatus;
   consumption: number;
@@ -40,12 +41,14 @@ async function importBuses() {
       }
       
       // Déterminer le statut
-      let status: BusStatus = BusStatus.EnUsage;
+      let status: BusStatus = 'active' as BusStatus;
       if (row.status && String(row.status).toLowerCase().includes('panne')) {
-        status = BusStatus.EnPanne;
+        status = 'maintenance' as BusStatus;
       }
       
       return {
+        busNumber: row.id || `BUS-${index + 1}`,
+        licensePlate: row.licensePlate || `MAT-${index + 1}`,
         type,
         status,
         consumption

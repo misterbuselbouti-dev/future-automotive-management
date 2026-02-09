@@ -1,10 +1,7 @@
 import * as XLSX from 'xlsx'
 import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient({
-  adapter: undefined,
-  accelerateUrl: undefined,
-})
+const prisma = new PrismaClient()
 
 async function importBuses() {
   try {
@@ -36,13 +33,14 @@ async function importBuses() {
       }
       
       // Déterminer le statut
-      let status: 'EnUsage' | 'EnPanne' = 'EnUsage'
+      let status: 'active' | 'inactive' | 'maintenance' | 'retired' = 'active'
       if (row['Statut'] && String(row['Statut']).toLowerCase().includes('panne')) {
-        status = 'EnPanne'
+        status = 'maintenance'
       }
       
       return {
-        id: row['N° Bus'] || index + 1, // Mapper 'N° Bus' à id
+        busNumber: row['N° Bus'] || `BUS-${index + 1}`, // Mapper 'N° Bus' à busNumber
+        licensePlate: row['Immatriculation'] || `MAT-${index + 1}`, // Ajouter licensePlate
         type,
         status,
         consumption
