@@ -538,8 +538,21 @@ INSERT INTO articles (reference, designation, description, prix_unitaire, stock_
 ('ART-005', 'Batterie 12V 100Ah', 'Batterie pour bus', 450.00, 3, 8, 2, 2, 'Électrique', 'Unité', TRUE, TRUE, TRUE),
 ('ART-006', 'Essuie-glace', 'Balai essuie-glace standard', 25.00, 20, 40, 10, 1, 'Accessoires', 'Unité', FALSE, FALSE, FALSE),
 ('ART-007', 'Ampoule Phare', 'Ampoule LED phare principal', 35.00, 15, 30, 8, 2, 'Éclairage', 'Unité', FALSE, FALSE, FALSE),
-('ART-008', 'Courroie Alternateur', 'Courroie d''alternateur standard', 85.00, 5, 10, 3, 1, 'Moteur', 'Unité', TRUE, FALSE, TRUE),
-ON CONFLICT (reference) DO NOTHING;
+('ART-008', 'Courroie Alternateur', 'Courroie d''alternateur standard', 85.00, 5, 10, 3, 1, 'Moteur', 'Unité', TRUE, FALSE, TRUE)
+ON CONFLICT (reference) DO UPDATE SET
+  designation = EXCLUDED.designation,
+  description = EXCLUDED.description,
+  prix_unitaire = EXCLUDED.prix_unitaire,
+  stock_min = EXCLUDED.stock_min,
+  stock_actuel = EXCLUDED.stock_actuel,
+  stock_securite = EXCLUDED.stock_securite,
+  fournisseur_id = EXCLUDED.fournisseur_id,
+  categorie = EXCLUDED.categorie,
+  unite_mesure = EXCLUDED.unite_mesure,
+  controle_qualite = EXCLUDED.controle_qualite,
+  is_batch_tracked = EXCLUDED.is_batch_tracked,
+  expiry_tracking = EXCLUDED.expiry_tracking,
+  critical_part = EXCLUDED.critical_part;
 
 -- Insert regional stocks for KSAR and TETOUAN
 INSERT INTO regional_stocks (article_id, region_id, quantity, min_quantity, max_quantity) VALUES
@@ -561,7 +574,11 @@ INSERT INTO regional_stocks (article_id, region_id, quantity, min_quantity, max_
 (6, 2, 15, 20, 40),  -- Essuie-glace
 (7, 2, 12, 15, 30),  -- Ampoule Phare
 (8, 2, 3, 5, 15)     -- Courroie Alternateur
-ON CONFLICT (article_id, region_id) DO NOTHING;
+ON CONFLICT (article_id, region_id) DO UPDATE SET
+  quantity = EXCLUDED.quantity,
+  min_quantity = EXCLUDED.min_quantity,
+  max_quantity = EXCLUDED.max_quantity,
+  last_updated = NOW();
 
 INSERT INTO bus_parts_requirements (bus_id, article_id, quantite_recommandee, frequence_remplacement, criticite) VALUES
 (1, 1, 20, 'mensuelle', 'critique'),
@@ -579,14 +596,26 @@ INSERT INTO bus_parts_requirements (bus_id, article_id, quantite_recommandee, fr
 (3, 3, 6, 'annuelle', 'critique'),
 (3, 4, 1, 'semestrielle', 'critique'),
 (3, 5, 1, 'annuelle', 'majeure')
-ON CONFLICT DO NOTHING;
+ON CONFLICT (bus_id, article_id) DO UPDATE SET
+  quantite_recommandee = EXCLUDED.quantite_recommandee,
+  frequence_remplacement = EXCLUDED.frequence_remplacement,
+  criticite = EXCLUDED.criticite;
 
 -- Insert sample maintenance records
 INSERT INTO maintenance (bus_id, type, description, scheduled_date, statut, priorite, cout, technician_id) VALUES
 (1, 'Maintenance Préventive', 'Vérification complète des systèmes', '2024-02-15', 'programme', 'normale', 0, 1),
 (2, 'Réparation Freinage', 'Remplacement plaquettes de frein', '2024-02-10', 'en_cours', 'urgente', 320.00, 2),
 (3, 'Maintenance Moteur', 'Changement huile et filtres', '2024-02-20', 'programme', 'normale', 150.00, 3)
-ON CONFLICT DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET
+  bus_id = EXCLUDED.bus_id,
+  type = EXCLUDED.type,
+  description = EXCLUDED.description,
+  scheduled_date = EXCLUDED.scheduled_date,
+  statut = EXCLUDED.statut,
+  priorite = EXCLUDED.priorite,
+  cout = EXCLUDED.cout,
+  technician_id = EXCLUDED.technician_id,
+  updated_at = NOW();
 
 -- Grant permissions (adjust as needed for your setup)
 GRANT ALL ON ALL TABLES IN SCHEMA public TO postgres;
